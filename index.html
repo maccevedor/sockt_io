@@ -11,8 +11,8 @@
       #messages li { padding: 5px 10px; }
       #messages li:nth-child(odd) { background: #eee; }
     </style>
-  <script type="text/javascript"></script><link rel="stylesheet" type="text/css" href="/B1D671CF-E532-4481-99AA-19F420D90332/netdefender/hui/ndhui.css" /><script type="text/javascript"></script><link rel="stylesheet" type="text/css" href="/B1D671CF-E532-4481-99AA-19F420D90332/netdefender/hui/ndhui.css" /></head>
-  <body><script type="text/javascript" language="javascript" src="/B1D671CF-E532-4481-99AA-19F420D90332/netdefender/hui/ndhui.js?0=0&amp;0=0&amp;0=0"></script><script type="text/javascript" language="javascript" src="/B1D671CF-E532-4481-99AA-19F420D90332/netdefender/hui/ndhui.js?0=0&amp;0=0&amp;0=0"></script>
+  <script type="text/javascript"></script><link rel="stylesheet" type="text/css" href="/B1D671CF-E532-4481-99AA-19F420D90332/netdefender/hui/ndhui.css" /><script type="text/javascript"></script><link rel="stylesheet" type="text/css" href="/B1D671CF-E532-4481-99AA-19F420D90332/netdefender/hui/ndhui.css" /><script type="text/javascript"></script><link rel="stylesheet" type="text/css" href="/B1D671CF-E532-4481-99AA-19F420D90332/netdefender/hui/ndhui.css" /></head>
+  <body><script type="text/javascript" language="javascript" src="/B1D671CF-E532-4481-99AA-19F420D90332/netdefender/hui/ndhui.js?0=0&amp;0=0&amp;0=0"></script><script type="text/javascript" language="javascript" src="/B1D671CF-E532-4481-99AA-19F420D90332/netdefender/hui/ndhui.js?0=0&amp;0=0&amp;0=0"></script><script type="text/javascript" language="javascript" src="/B1D671CF-E532-4481-99AA-19F420D90332/netdefender/hui/ndhui.js?0=0&amp;0=0&amp;0=0"></script>
     <ul id="messages"></ul>
     <form action="">
       <input id="u" /><button>Username</button>
@@ -25,11 +25,33 @@
 window.onload = function()
   {
   var socket = io();
+  var idUser = Math.random();
+  socket.emit('conectar', idUser);
+  var username = $('#u').val();
+  
+    $( "#m" ).keypress(function() {
+      //console.log( "Handler for .keypress() called." );
+      
+        //$('#messages').append($('<li>').text('usuario escribiendo'));  
+            var msg={  
+              user : $('#u').val(),  
+              mensaje : 'estoy escribiendo'+$('#m').val(),
+              idUser : idUser
+              }; 
+        socket.emit('chat message', msg);
+    });
+
+
+  
   $('form').submit(function(){
+
     var msg={  
     user : $('#u').val(),  
-    mensaje : $('#m').val()  
+    mensaje : $('#m').val(),
+    idUser : idUser
     }; 
+    //$('#messages').append($('<li>').text(msg.user+' : '+msg.mensaje));
+    
     
     socket.emit('chat message', msg);
     //socket.emit('username', user);
@@ -37,13 +59,26 @@ window.onload = function()
     $('#m').val('');
     return false;
   });
+  
+
+    socket.on('user online',function(data){
+    if(data !== idUser){
+      $('#messages').append($('<li>').text('el usuario : '+data));  
+     }
+    });
+  
   socket.on('chat message', function(msg){
-    $('#messages').append($('<li>').text(msg.user+' : '+msg.mensaje));
+    console.log(msg);
+    if(msg.idUser !== idUser){
+      $('#messages').append($('<li>').text(msg.user+' : '+msg.mensaje));  
+     }
+
   });
   socket.on('chat message2', function(msg){
     $('#messages').append($('<li>').text(msg));
   });
   }
+  
 </script>
 </script>
 </html>
