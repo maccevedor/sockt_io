@@ -1,0 +1,10 @@
+doctype html
+html
+  head
+    title my jade template
+  body
+    - var count = 0;
+      each item in quotes
+        if count < quotes.length
+          li= item.name
+        - count++;

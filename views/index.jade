@@ -1,0 +1,13 @@
+extends layout
+
+block content
+    h1= title
+    p Welcome to #{title}
+    form(action="/quotes", method="post")
+        div.input
+            span.label Title
+            input(type="text", name="name")
+            span.label Title
+            input(type="text",  name="quote",value="tarea")
+        div.actions
+            input(type="submit" value="Submit")
